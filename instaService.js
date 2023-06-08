@@ -30,3 +30,26 @@ module.exports.getAllInstaPosts = () => {
     }
   })
 }
+
+module.exports.getAllProfiles = () => {
+  return new Promise((resolve, reject) => {
+    if(profiles) {
+      resolve(profiles)
+    } else {
+      reject("No profiles found!")
+    }
+  })
+}
+
+module.exports.addProfile = (profile) => {
+  return new Promise((resolve, reject) => {
+    if (profile) {
+      profile.id = profiles.length + 1
+      profiles.push(profile)
+      resolve("success!")
+    } else {
+      reject("new profile not available")
+    }
+
+  })
+}
