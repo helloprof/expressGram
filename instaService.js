@@ -53,3 +53,17 @@ module.exports.addProfile = (profile) => {
 
   })
 }
+
+module.exports.addInstaPost = (instaPost) => {
+  return new Promise((resolve, reject) => {
+    if (instaPost) {
+      instaPost.id = instaPosts.length + 1
+      instaPost.date = new Date()
+      instaPosts.push(instaPost)
+      resolve("success!")
+    } else {
+      reject("new insta post not available")
+    }
+
+  })
+}
