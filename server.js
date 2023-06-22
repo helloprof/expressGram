@@ -4,6 +4,13 @@ const path = require("path")
 const instaService = require("./instaService")
 const env = require("dotenv")
 env.config()
+const exphbs = require('express-handlebars');
+
+app.engine('.hbs', exphbs.engine({ 
+  extname: '.hbs',
+  // defaultLayout: 'main' 
+}));
+app.set('view engine', '.hbs');
 
 const multer = require("multer");
 const cloudinary = require('cloudinary').v2
@@ -27,27 +34,42 @@ function onHttpStart() {
 }
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/index.html"))
-})
-
-app.get("/instaPosts", (req, res) => {
+  // res.sendFile(path.join(__dirname, "/views/index.html"))
   instaService.getAllInstaPosts().then((instaPosts) => {
-    res.json(instaPosts)
+    res.render('index', {
+      data: instaPosts
+      // layout: 'main'
+    })
   }).catch((err) => {
     console.log(err)
   })
+
 })
+
+// app.get("/instaPosts", (req, res) => {
+//   instaService.getAllInstaPosts().then((instaPosts) => {
+//     res.json(instaPosts)
+//   }).catch((err) => {
+//     console.log(err)
+//   })
+// })
 
 app.get("/profiles", (req, res) => {
   instaService.getAllProfiles().then((profiles) => {
-    res.json(profiles)
+    // res.json(profiles)
+    res.render('profiles', {
+      data: profiles
+    })
   }).catch((err) => {
     console.log(err)
   })
 })
 
 app.get("/profiles/add", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/addProfile.html"))
+  // res.sendFile(path.join(__dirname, "/views/addProfile.html"))
+  res.render('addProfile', {
+    // layout: 'main'
+  })
 })
 
 app.post("/profiles/add", (req, res) => {
@@ -61,7 +83,10 @@ app.post("/profiles/add", (req, res) => {
 })
 
 app.get("/instaPosts/add", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/addInstaPost.html"))
+  // res.sendFile(path.join(__dirname, "/views/addInstaPost.html"))
+  res.render('addInstaPost', {
+    // layout: 'main'
+  })
 })
 
 app.post("/instaPosts/add", upload.single("instaFile"),(req, res) => {
@@ -98,7 +123,7 @@ app.post("/instaPosts/add", upload.single("instaFile"),(req, res) => {
   function processPost(expressGramURL) {
     req.body.instaFile = expressGramURL;
     instaService.addInstaPost(req.body).then(() => {
-      res.redirect("/instaPosts")
+      res.redirect("/")
     }).catch((err) => {
       res.redirect("/instaPosts/add")
       console.log(err)
