@@ -1,0 +1,21 @@
+<div class="container" style="padding-top:60px">
+  <h1>Welcome to ExpressGram</h1>
+
+  {{#each data}}
+  <div class="card">
+    <img class="card-img-top" style="height:500px"
+      src="{{instaFile}}">
+    <div class="card-body">
+      <h5 class="card-title">{{profile}}</h5>
+      <p class="card-text">{{caption}}</p>
+      <button class="btn btn-primary">like<i class="fa fa-thumbs-up"></i></button>
+    </div>
+  </div>
+  {{else}}
+  <div class="card">
+    <h2>
+      NO DATA AVAILABLE!
+    </h2>
+  </div>
+  {{/each}}
+</div>
