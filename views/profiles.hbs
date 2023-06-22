@@ -1,0 +1,24 @@
+<div class="container" style="padding-top:60px">
+  <h1>Profiles</h1>
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Profile</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each data}}
+      <tr>
+        <th scope="row">{{@index}}</th>
+        <td>{{id}}</td>
+        <td>{{profile}}</td>
+      </tr>
+      {{else}}
+      <tr>
+        <td>NO DATA!</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
