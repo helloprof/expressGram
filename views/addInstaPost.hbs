@@ -1,0 +1,26 @@
+<div class="container" style="padding-top:60px">
+  <h1>Add New ExpresGram Post!</h1>
+  <form action="/instaPosts/add" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="profile">Profile</label>
+
+      <select name="profile" class="form-select">
+        <option value="1">suluxanmohanraj</option>
+        <option value="2">beyonce</option>
+        <option value="3">kyliejenner</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="profile">Photo/Video Upload</label>
+      <input type="file" class="form-control" id="instaFile" name="instaFile">
+    </div>
+
+    <div class="form-group">
+      <label for="profile">Caption</label>
+      <input type="text" class="form-control" id="caption" name="caption">
+    </div>
+    </br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
