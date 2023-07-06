@@ -1,5 +1,6 @@
 <div class="container" style="padding-top:60px">
   <h1>Profiles</h1>
+  <a href="/profiles/add" class="btn btn-dark">Add Profile</a>
   <table class="table">
     <thead class="thead-dark">
       <tr>
@@ -10,8 +11,7 @@
     <tbody>
       {{#each data}}
       <tr>
-        <th scope="row">{{@index}}</th>
-        <td>{{id}}</td>
+        <td>{{profileID}}</td>
         <td>{{profile}}</td>
       </tr>
       {{else}}
