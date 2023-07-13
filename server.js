@@ -84,12 +84,16 @@ app.post("/profiles/add", (req, res) => {
 
 app.get("/instaPosts/add", (req, res) => {
   // res.sendFile(path.join(__dirname, "/views/addInstaPost.html"))
-  res.render('addInstaPost', {
-    // layout: 'main'
+  instaService.getAllProfiles().then((profiles) => {
+    res.render('addInstaPost', {
+      // layout: 'main'
+      data: profiles
+    })
   })
+
 })
 
-app.post("/instaPosts/add", upload.single("instaFile"),(req, res) => {
+app.post("/instaPosts/add", upload.single("photo"),(req, res) => {
   if (req.file) {
     let streamUpload = (req) => {
       return new Promise((resolve, reject) => {
@@ -121,7 +125,7 @@ app.post("/instaPosts/add", upload.single("instaFile"),(req, res) => {
   }
 
   function processPost(expressGramURL) {
-    req.body.instaFile = expressGramURL;
+    req.body.photo = expressGramURL;
     instaService.addInstaPost(req.body).then(() => {
       res.redirect("/")
     }).catch((err) => {
