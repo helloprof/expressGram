@@ -60,11 +60,21 @@ module.exports.initialize = () => {
 
 module.exports.getAllInstaPosts = () => {
   return new Promise((resolve, reject) => {
-    if(instaPosts) {
-      resolve(instaPosts)
-    } else {
-      reject("No posts found!")
-    }
+    // if(instaPosts) {
+    //   resolve(instaPosts)
+    // } else {
+    //   reject("No posts found!")
+    // }
+    InstaPost.findAll().then((instaPosts) => {
+      if(instaPosts) {
+        resolve(instaPosts)
+      } else {
+        reject("No insta posts found!")
+      }
+    }).catch((err) => {
+      console.log(err)
+      reject("ERR RETRIEVING POSTS ERR: "+err)
+    })
   })
 }
 
@@ -102,14 +112,23 @@ module.exports.addProfile = (profile) => {
 
 module.exports.addInstaPost = (instaPost) => {
   return new Promise((resolve, reject) => {
-    if (instaPost) {
-      instaPost.id = instaPosts.length + 1
-      instaPost.date = new Date()
-      instaPosts.push(instaPost)
-      resolve("success!")
-    } else {
-      reject("new insta post not available")
-    }
+    // if (instaPost) {
+    //   instaPost.id = instaPosts.length + 1
+    //   instaPost.date = new Date()
+    //   instaPosts.push(instaPost)
+    //   resolve("success!")
+    // } else {
+    //   reject("new insta post not available")
+    // }
+    instaPost.postDate = new Date()
+    InstaPost.create(instaPost).then(() => {
+      console.log("POST ADDED")
+      resolve()
+    }).catch((err) => {
+      console.log("ERROR CREATING POST! ERR: "+err)
+      reject()
+    })
 
   })
 }
+
