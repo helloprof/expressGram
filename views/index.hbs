@@ -1,14 +1,18 @@
 <div class="container" style="padding-top:60px">
   <h1>Welcome to ExpressGram</h1>
-
+  <a href="/instaPosts/add" class="btn btn-dark">Add Insta Post</a>
+</br>
   {{#each data}}
   <div class="card">
-    <img class="card-img-top" style="height:500px"
+    <img class="card-img-top"
       src="{{photo}}">
     <div class="card-body">
       <h5 class="card-title">{{profile}}</h5>
       <p class="card-text">{{caption}}</p>
       <button class="btn btn-primary">like<i class="fa fa-thumbs-up"></i></button>
+      <a class="btn btn-dark" href="/instaPost/{{instaPostID}}">{{instaPostID}}</a>
+      <a class="btn btn-danger" href="/instaPost/delete/{{instaPostID}}">Delete</a>
+
     </div>
   </div>
   {{else}}
