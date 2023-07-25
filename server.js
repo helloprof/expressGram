@@ -54,6 +54,8 @@ app.get("/", (req, res) => {
 //   })
 // })
 
+
+
 app.get("/profiles", (req, res) => {
   instaService.getAllProfiles().then((profiles) => {
     // res.json(profiles)
@@ -137,6 +139,32 @@ app.post("/instaPosts/add", upload.single("photo"),(req, res) => {
   }
 
 
+})
+
+app.get("/instaPost/delete/:id", (req, res) => {
+  instaService.deleteInstaPostById(req.params.id).then(() => {
+    res.redirect("/")
+  }).catch((err) => {
+    console.log(err)
+  })
+})
+
+app.get("/profiles/delete/:id", (req, res) => {
+  instaService.deleteProfileById(req.params.id).then(() => {
+    res.redirect("/profiles")
+  }).catch((err) => {
+    console.log(err)
+  })
+})
+
+app.get("/instaPost/:id", (req, res) => {
+  instaService.getInstaPostById(req.params.id).then((instaPost) => {
+    res.render('index', {
+      data: [instaPost]
+    })
+  }).catch((err) => {
+    console.log(err)
+  })
 })
 
 app.use((req, res) => {
