@@ -6,6 +6,7 @@
       <tr>
         <th scope="col">ID</th>
         <th scope="col">Profile</th>
+        <th scope="col">Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -13,6 +14,7 @@
       <tr>
         <td>{{profileID}}</td>
         <td>{{profile}}</td>
+        <td><a class="btn btn-danger" href="/profiles/delete/{{profileID}}">Delete</a></td>
       </tr>
       {{else}}
       <tr>
