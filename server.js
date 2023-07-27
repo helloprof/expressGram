@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const path = require("path")
 const instaService = require("./instaService")
+const userService = require("./userService")
+
 const env = require("dotenv")
 env.config()
 const exphbs = require('express-handlebars');
@@ -167,11 +169,41 @@ app.get("/instaPost/:id", (req, res) => {
   })
 })
 
+app.get("/register", (req, res) => {
+  res.render('registerUser', {
+    layout: 'main'
+  })
+})
+
+app.post("/register", (req, res) => {
+  userService.registerUser(req.body).then(() => {
+    res.redirect("/login")
+  }).catch((err) => {
+    console.log(err)
+  })
+})
+
+app.get("/login", (req, res) => {
+  res.render('loginUser', {
+    layout: 'main'
+  })
+})
+
+app.post("/login", (req, res) => {
+  userService.loginUser(req.body).then(() => {
+    // res.redirect("/login")
+  }).catch((err) => {
+    console.log(err)
+  })
+})
+
 app.use((req, res) => {
   res.status(404).send("Page Not Found")
 })
 
-instaService.initialize().then(() => {
+instaService.initialize()
+.then(userService.initialize)
+.then(() => {
   app.listen(HTTP_PORT, onHttpStart)
 }).catch((err) => {
   console.log(err)
