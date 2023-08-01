@@ -1,5 +1,9 @@
 <div class="container" style="padding-top:60px">
     <h1>Register User</h1>
+    {{#if errMsg}}
+        <div class="alert alert-danger"> <strong>Error:</strong> {{errMsg}}</div> 
+    {{/if}}
+    {{#unless successMsg}}
     <form action="/register" method="POST">
         <div class="form-group">
             <label for="userName">Username</label>
@@ -11,13 +15,18 @@
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="text" class="form-control" id="password" name="password">
+            <input type="password" class="form-control" id="password" name="password">
         </div>
         <div class="form-group">
             <label for="password2">Confirm Password</label>
-            <input type="text" class="form-control" id="password2" name="password2">
+            <input type="password" class="form-control" id="password2" name="password2">
         </div>
         </br>
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" class="btn btn-success">Register</button>
     </form>
+    {{else}}
+        <div class="alert alert-success"> <strong>Success:</strong> {{successMsg}}</div> 
+    {{/unless}}
+    </br>
+    <a href="/login" class="btn btn-primary">Login</a>
 </div>
