@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 const env = require("dotenv")
 env.config()
 
+const bcrypt = require('bcryptjs');
 
 userSchema = new Schema({
   "userName": {
@@ -42,17 +43,49 @@ module.exports.registerUser = function(userData) {
     if (userData.password != userData.password2) {
       reject("PASSWORDS DO NOT MATCH!")
     } else {
-      let newUser = new User(userData)
-      newUser.save().then(() => {
-        resolve()
+      bcrypt.hash(userData.password, 10).then((hash) => {
+        console.log(hash)
+        userData.password = hash 
+
+        let newUser = new User(userData)
+        newUser.save().then(() => {
+          resolve("USER CREATED SUCCESSFULLY!")
+        }).catch((err) => {
+          if (err.code == 11000) {
+            reject("USERNAME IS ALREADY TAKEN")
+          } else {
+            reject(err)
+          }
+        })
       }).catch((err) => {
-        if (err.code == 11000) {
-          reject("USERNAME IS ALREADY TAKEN")
-        } else {
-          reject("ERROR: "+err)
-        }
+        console.log(err)
+        reject("PASSWORD ENCRYPTION ERROR! ERR: "+err)
       })
     }
+  })
+}
+
+module.exports.loginUser = function(userData) {
+  return new Promise((resolve, reject) => {
+    User.findOne({userName: userData.userName})
+    .exec()
+    .then((user) => {
+      bcrypt.compare(userData.password, user.password).then((result) => {
+        console.log(result)
+        console.log("USER LOGGED IN SUCCESSFULLY")
+        if(result === false) {
+          reject("CREDENTIALS ERR")
+        } else {
+          resolve()
+        }
+      }).catch((err) => {
+        console.log(err)
+        reject("CREDENTIALS INCORRECT! TRY AGAIN")
+      })
+
+    }).catch((err) => {
+      reject("CREDENTIALS INCORRECT! TRY AGAIN")
+    })
   })
 }
 
