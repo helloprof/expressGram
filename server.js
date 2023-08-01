@@ -176,10 +176,18 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  userService.registerUser(req.body).then(() => {
-    res.redirect("/login")
+  userService.registerUser(req.body).then((successMsg) => {
+    // res.redirect("/login")
+    res.render("registerUser", {
+      layout: 'main',
+      successMsg: successMsg
+    })
   }).catch((err) => {
     console.log(err)
+    res.render("registerUser", {
+      layout: 'main',
+      errMsg: err
+    })
   })
 })
 
@@ -191,7 +199,7 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   userService.loginUser(req.body).then(() => {
-    // res.redirect("/login")
+    res.redirect("/")
   }).catch((err) => {
     console.log(err)
   })
