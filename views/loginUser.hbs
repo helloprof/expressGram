@@ -1,5 +1,8 @@
 <div class="container" style="padding-top:60px">
     <h1>Login</h1>
+    {{#if errMsg}}
+        <div class="alert alert-danger"> <strong>Error:</strong> {{errMsg}}</div> 
+    {{/if}}
     <form action="/login" method="POST">
         <div class="form-group">
             <label for="userName">Username</label>
