@@ -1,29 +1,48 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">ExpressGram</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profiles">Profiles</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/">InstaPosts</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/register">Register</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">ExpressGram</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/profiles">Profiles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/">InstaPosts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Register</a>
+        </li>
+      </ul>
+      {{#if session.user}}
+      <form class="navbar-form navbar-right">
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="userMenu" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{session.user.userName}}&nbsp;&nbsp;<span
+              class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="userMenu">
+            <li><a href="/loginHistory">Login History</a></li>
+            <li><a href="/logout">Log Out</a></li>
+          </ul>
         </div>
+      </form>
+      {{else}}
+      <form class="navbar-form navbar-right">
+        <a href="/register" class="btn btn-success"><span
+            class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Register</a>
+        <a href="/login" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;&nbsp;Log
+          In</a>
+      </form>
+
+      {{/if}}
+
     </div>
+  </div>
 </nav>
