@@ -3,6 +3,7 @@ const app = express();
 const path = require("path")
 const instaService = require("./instaService")
 const userService = require("./userService")
+const clientSessions = require("client-sessions");
 
 const env = require("dotenv")
 env.config()
@@ -13,6 +14,26 @@ app.engine('.hbs', exphbs.engine({
   // defaultLayout: 'main' 
 }));
 app.set('view engine', '.hbs');
+
+app.use(clientSessions({
+  cookieName: "session", // this is the object name that will be added to 'req'
+  secret: "longpassword123_web322", // this should be a long un-guessable string.
+  duration: 2 * 60 * 1000, // duration of the session in milliseconds (2 minutes)
+  activeDuration: 1000 * 60 // the session will be extended by this many ms each request (1 minute)
+}))
+
+app.use(function(req, res, next) {
+  res.locals.session = req.session
+  next()
+})
+
+function ensureLogin(req, res, next) {
+  if (!req.session.user) {
+    res.redirect("/login");
+  } else {
+    next();
+  }
+}
 
 const multer = require("multer");
 const cloudinary = require('cloudinary').v2
@@ -48,16 +69,6 @@ app.get("/", (req, res) => {
 
 })
 
-// app.get("/instaPosts", (req, res) => {
-//   instaService.getAllInstaPosts().then((instaPosts) => {
-//     res.json(instaPosts)
-//   }).catch((err) => {
-//     console.log(err)
-//   })
-// })
-
-
-
 app.get("/profiles", (req, res) => {
   instaService.getAllProfiles().then((profiles) => {
     // res.json(profiles)
@@ -69,14 +80,14 @@ app.get("/profiles", (req, res) => {
   })
 })
 
-app.get("/profiles/add", (req, res) => {
+app.get("/profiles/add", ensureLogin, (req, res) => {
   // res.sendFile(path.join(__dirname, "/views/addProfile.html"))
   res.render('addProfile', {
     // layout: 'main'
   })
 })
 
-app.post("/profiles/add", (req, res) => {
+app.post("/profiles/add", ensureLogin, (req, res) => {
   // res.sendFile(path.join(__dirname, "/views/addProfile.html"))
   instaService.addProfile(req.body).then(() => {
     res.redirect("/profiles")
@@ -86,7 +97,7 @@ app.post("/profiles/add", (req, res) => {
 
 })
 
-app.get("/instaPosts/add", (req, res) => {
+app.get("/instaPosts/add", ensureLogin, (req, res) => {
   // res.sendFile(path.join(__dirname, "/views/addInstaPost.html"))
   instaService.getAllProfiles().then((profiles) => {
     res.render('addInstaPost', {
@@ -97,7 +108,7 @@ app.get("/instaPosts/add", (req, res) => {
 
 })
 
-app.post("/instaPosts/add", upload.single("photo"),(req, res) => {
+app.post("/instaPosts/add", ensureLogin, upload.single("photo"),(req, res) => {
   if (req.file) {
     let streamUpload = (req) => {
       return new Promise((resolve, reject) => {
@@ -143,7 +154,7 @@ app.post("/instaPosts/add", upload.single("photo"),(req, res) => {
 
 })
 
-app.get("/instaPost/delete/:id", (req, res) => {
+app.get("/instaPost/delete/:id", ensureLogin, (req, res) => {
   instaService.deleteInstaPostById(req.params.id).then(() => {
     res.redirect("/")
   }).catch((err) => {
@@ -151,7 +162,7 @@ app.get("/instaPost/delete/:id", (req, res) => {
   })
 })
 
-app.get("/profiles/delete/:id", (req, res) => {
+app.get("/profiles/delete/:id", ensureLogin, (req, res) => {
   instaService.deleteProfileById(req.params.id).then(() => {
     res.redirect("/profiles")
   }).catch((err) => {
@@ -159,7 +170,7 @@ app.get("/profiles/delete/:id", (req, res) => {
   })
 })
 
-app.get("/instaPost/:id", (req, res) => {
+app.get("/instaPost/:id", ensureLogin, (req, res) => {
   instaService.getInstaPostById(req.params.id).then((instaPost) => {
     res.render('index', {
       data: [instaPost]
@@ -198,11 +209,32 @@ app.get("/login", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-  userService.loginUser(req.body).then(() => {
+  req.body.userAgent = req.get('User-Agent')
+  userService.loginUser(req.body).then((user) => {
+    req.session.user = {
+      userName: user.userName,
+      email: user.email,
+      loginHistory: user.loginHistory
+    }
     res.redirect("/")
   }).catch((err) => {
     console.log(err)
+    res.render('loginUser', {
+      layout: 'main',
+      errMsg: err
+    })
   })
+})
+
+app.get("/loginHistory", ensureLogin, (req, res) => {
+  res.render('loginHistory', {
+    layout: 'main'
+  })
+})
+
+app.get("/logout", ensureLogin, (req, res) => {
+  req.session.reset()
+  res.redirect("/")
 })
 
 app.use((req, res) => {
