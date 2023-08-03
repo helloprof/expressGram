@@ -1,0 +1,24 @@
+<div class="container" style="padding-top:60px">
+  <h1>Login History for {{session.user.email}}</h1>
+  <a href="/logout" class="btn btn-danger">Logout</a>
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Date/Time</th>
+        <th scope="col">User-Agent</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each session.user.loginHistory}}
+      <tr>
+        <td>{{dateTime}}</td>
+        <td>{{userAgent}}</td>
+      </tr>
+      {{else}}
+      <tr>
+        <td>NO DATA!</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
